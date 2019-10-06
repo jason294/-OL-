@@ -16,14 +16,14 @@ Sub SetGlobalConstant
     // Hwnd0 和 Hwnd 相同位置的Y坐标差
     kOffsetY = 70
     // 图片文件主目录
-    kPicPath = "C:\Users\JASON-BOOK\Documents\workspace\火影OL脚本\HYOL\"
+    kPicPath = "D:\workspace\按键精灵脚本\火影OL脚本\"
     // 使用Dim（Const）定义变量(常量)后，变量（常量）只在函数体内部有效；若不用Dim定义，则函数体外面也能访问到
     // 是否为“高级模式”
     Dim isAdvance
-    isAdvance = False
+    isAdvance = True
     // 屏幕分辨率
-    kScreenW = 1400
-    kScreenH = 800
+    kScreenW = 1920
+    kScreenH = 1080
     
     // 获取游戏窗口句柄
     Dim Hwnd1, Hwnd2
@@ -96,6 +96,7 @@ Function findPicLocation(picPath, name, needEnd)
     Dim iCoord, XY
     If InStr(picPath, "|") = 0 Then 
         picPath = kPicPath & picPath
+        TracePrint picPath
         iCoord = Plugin.Bkgnd.FindPic(Hwnd0,0, 0,kScreenW, kScreenH, picPath, 0, 0.8)
     Else 
         Dim paths, i
@@ -320,7 +321,7 @@ Sub 生存演戏(isEnd)
         // 点击 开战
         XY = Lib.HYOL.findPicLocation("生存演戏\开战.bmp", "生存演戏_开战", True)
         Call Lib.HYOL.HYLeftClick(XY(0) + 40, XY(1) + 20)
-        Delay 2000
+        Delay 5000
 	
         // 点击 自动 和 2倍速
         If i = 1 Then 
@@ -332,11 +333,11 @@ Sub 生存演戏(isEnd)
         // 检测 确定 按钮
         XY = Lib.HYOL.findPicLocationTimes("生存演戏\确定.bmp", "生存演戏-确定", 30, 3000, True)
         Call Lib.HYOL.HYLeftClick(XY(0) + 40, XY(1) + 20)
-        Delay 2000
+        Delay 4000
     Next
     Delay 1000
     // 点击一键领取
-    XY = Lib.HYOL.findPicLocation("生存演戏\一键领取.bmp", "生存演戏-一键领取", True)
+    XY = Lib.HYOL.findPicLocationTimes("生存演戏\一键领取.bmp", "生存演戏-一键领取", 10, 2000, True)
     Call Lib.HYOL.HYLeftClick(XY(0) + 20, XY(1) + 15)
     Delay 1000
     XY = Lib.HYOL.findPicLocation("生存演戏\是.bmp", "生存演戏-是", True)
@@ -389,7 +390,7 @@ Sub 羁绊对决(isEnd)
     // 胜利次数小于12次, 人头数小于96
     Dim i, 匹配到战斗
     i=0
-    While i<12
+    While i<6
         // 3. 点击“匹配战斗”
         If matchBattleBtnX = 0 Then 
             XY = Lib.HYOL.findPicLocationTimes("羁绊对决\匹配战斗.bmp", "羁绊对决-匹配战斗",5,2000,True)
