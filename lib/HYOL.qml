@@ -25,6 +25,7 @@ Sub SetGlobalConstant
     kScreenW = 1400
     kScreenH = 800
     
+    Hwnd_2 = 0
     // 获取游戏窗口句柄
     Dim Hwnd1, Hwnd2
     // Hwnd0 不支持后台点击，但支持后台找图， Hwnd 不支持后台找图，但支持后台点击
@@ -134,6 +135,13 @@ End Sub
 -------------------------------- 通用业务模块 --------------------------------------
 */
 
+// 切换游戏窗口
+Sub SwitchGameWindow(index)
+	Call Plugin.Bkgnd.MoveTo(Hwnd0, 125*index+40, 25) 
+	Call Plugin.Bkgnd.LeftClick(Hwnd0, 125 * index + 40, 25)
+	// 重新获取窗口句柄还是第一个窗口的，无法获取第二个窗口的句柄
+End Sub
+
 // 点击“开战”
 Sub ClickFireButton
     Dim XY
@@ -148,16 +156,34 @@ End Sub
 
 // 点击自动战斗和2倍速
 Sub ClickAutoFireButton()
-    Dim XY
+	Dim XY
     XY = findPicLocation("common\自动.bmp", "自动", False)
     If IsNull(XY) = False Then 
         Call Plugin.Bkgnd.LeftClick(Hwnd, XY(0) + 20, XY(1) + 20)
         Delay 1000
     End If
+    
     XY = findPicLocation("common\速度.bmp", "速度", False)
     If IsNull(XY) = False Then 
         Call Plugin.Bkgnd.LeftClick(Hwnd, XY(0)+10, XY(1)+10)
     End If
+End Sub
+
+Sub ClickAutoFireButtonInAllWindow
+	Call ClickAutoFireButton()
+	Delay 1000
+	Call SwitchGameWindow(2)
+	Delay 2000
+	
+	Dim XY
+	XY = findPicLocation("common\自动.bmp", "自动", False)
+	If IsNull(XY) = False Then 
+		MoveTo XY(0)+10, XY(1)+kOffsetY+10
+		LeftClick 1
+	End If
+	
+	Delay 1000
+	Call SwitchGameWindow(1)
 End Sub
 
 // 点击限时活动中指定选项，并点击参加
@@ -251,7 +277,8 @@ Sub 组队本(isEnd)
 
         // 点击“自动”和“2倍速”
         If i = 0 Then 
-            Call Lib.HYOL.ClickAutoFireButton
+            Call Lib.HYOL.ClickAutoFireButtonInAllWindow
+            
         End If
     
         // 预计战斗时间
@@ -336,7 +363,7 @@ Sub 生存演戏(isEnd)
     Next
     Delay 1000
     // 点击一键领取
-    XY = Lib.HYOL.findPicLocation("生存演戏\一键领取.bmp", "生存演戏-一键领取", True)
+    XY = Lib.HYOL.findPicLocationTimes("生存演戏\一键领取.bmp", "生存演戏-一键领取", 3, 2000, True)
     Call Lib.HYOL.HYLeftClick(XY(0) + 20, XY(1) + 15)
     Delay 1000
     XY = Lib.HYOL.findPicLocation("生存演戏\是.bmp", "生存演戏-是", True)
@@ -434,7 +461,7 @@ Sub 羁绊对决(isEnd)
     
         // 点击自动
         If i = 0 Then 
-            Call Lib.HYOL.ClickAutoFireButton
+            Call Lib.HYOL.ClickAutoFireButtonInAllWindow
             Delay 1000
         End If
     
