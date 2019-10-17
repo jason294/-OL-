@@ -11,10 +11,12 @@ MacroID=1981fe98-b958-422b-a951-7ce591b11b9e
 */
 // 设置全局常量
 Sub SetGlobalConstant
-    Const a ="aaa"
+	kHeader1H = 70
+	kHeader2H = 50
+	
     MsgBox "点击“确认”运行脚本", 4096
     // Hwnd0 和 Hwnd 相同位置的Y坐标差
-    kOffsetY = 70
+    kOffsetY = kHeader1H
     // 图片文件主目录
     kPicPath = "C:\Users\JASON-BOOK\Documents\workspace\火影OL脚本\HYOL\"
     // 使用Dim（Const）定义变量(常量)后，变量（常量）只在函数体内部有效；若不用Dim定义，则函数体外面也能访问到
@@ -36,7 +38,6 @@ Sub SetGlobalConstant
         Hwnd = Plugin.Window.FindEx(Hwnd2, 0, "Chrome_RenderWidgetHostHWND", 0)
         TracePrint "高级模式" & Hwnd0 & " " & Hwnd1 & " " & Hwnd2 & " " & Hwnd
     Else 
-        kOffsetY = kOffsetY + 50
         Dim Hwnd3, Hwnd4, Hwnd5
         Hwnd1 = Plugin.Window.FindEx(Hwnd0, 0, "iecontainerclass", 0)
         Hwnd2 = Plugin.Window.FindEx(Hwnd1, 0, "AtlAxWin120", 0)
@@ -45,6 +46,12 @@ Sub SetGlobalConstant
         Hwnd5 = Plugin.Window.FindEx(Hwnd4, 0, "Internet Explorer_Server", 0)
         Hwnd = Plugin.Window.FindEx(Hwnd5, 0, "MacromediaFlashPlayerActiveX", 0)
         TracePrint "基础模式：" & Hwnd0 & " " & Hwnd1 & " " & Hwnd2 & " " & Hwnd3 & " " & Hwnd4 & " " & Hwnd5 & " " & Hwnd
+        
+        Color = Plugin.Bkgnd.GetPixelColor(Hwnd0, 13, 84)
+		If Color = "404040" Then 
+			TracePrint "有header2"
+			kOffsetY = kOffsetY + kHeader2H
+		End If
     End If
 End Sub
 
@@ -342,12 +349,12 @@ Sub 生存演戏(isEnd)
         // 点击 SS
         XY = Lib.HYOL.findPicLocation("生存演戏\" & picName & ".bmp", "生存演戏_" & picName, True)
         Call Lib.HYOL.HYLeftClick(XY(0) + 20, XY(1) + 20)
-        Delay 8000
+        Delay 10000
 
         // 点击 开战
         XY = Lib.HYOL.findPicLocation("生存演戏\开战.bmp", "生存演戏_开战", True)
         Call Lib.HYOL.HYLeftClick(XY(0) + 40, XY(1) + 20)
-        Delay 2000
+        Delay 5000
 	
         // 点击 自动 和 2倍速
         If i = 1 Then 
@@ -361,7 +368,7 @@ Sub 生存演戏(isEnd)
         Call Lib.HYOL.HYLeftClick(XY(0) + 40, XY(1) + 20)
         Delay 2000
     Next
-    Delay 1000
+    Delay 3000
     // 点击一键领取
     XY = Lib.HYOL.findPicLocationTimes("生存演戏\一键领取.bmp", "生存演戏-一键领取", 3, 2000, True)
     Call Lib.HYOL.HYLeftClick(XY(0) + 20, XY(1) + 15)
@@ -460,7 +467,7 @@ Sub 羁绊对决(isEnd)
         Delay 1000
     
         // 点击自动
-        If i = 0 Then 
+        If i = 0 or i = 1 Then 
             Call Lib.HYOL.ClickAutoFireButtonInAllWindow
             Delay 1000
         End If
